@@ -1,0 +1,33 @@
+{
+  "name": "todo-widget-app",
+  "version": "0.1.0",
+  "description": "Widget de tarefas para o ambiente de trabalho do Windows",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.david.todowidget",
+    "productName": "Tarefas",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "signExecutable": false,
+      "artifactName": "Tarefas.exe"
+    },
+    "directories": {
+      "output": "release"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "koffi": "^3.3.2"
+  }
+}
