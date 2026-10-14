@@ -1,0 +1,1184 @@
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+
+  /* Vidro: brilho nas bordas + reflexo diagonal + tinta leve */
+  /* A desfocagem vem do material nativo da janela (acrylic); aqui fica só a luz */
+  --glass:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.10) 38%, rgba(255, 255, 255, 0.04) 62%, rgba(255, 255, 255, 0.26) 100%),
+    rgba(248, 249, 252, 0.62);
+  --glass-rim: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.08) 35%, rgba(255, 255, 255, 0.04) 65%, rgba(255, 255, 255, 0.6));
+  --glass-inner: rgba(255, 255, 255, 0.16);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+
+  --text: #111116;
+  --text-2: rgba(40, 40, 50, 0.6);
+  --separator: rgba(40, 40, 50, 0.12);
+  --fill: rgba(255, 255, 255, 0.38);
+  --accent: #ff3b30;
+  --accent-text: #ffffff;
+  --red: #e0352b;
+  --red-tint: rgba(255, 59, 48, 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --glass:
+      linear-gradient(150deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 38%, rgba(255, 255, 255, 0.02) 62%, rgba(255, 255, 255, 0.14) 100%),
+      rgba(20, 20, 28, 0.62);
+    --glass-rim: linear-gradient(160deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.04) 35%, rgba(255, 255, 255, 0.02) 65%, rgba(255, 255, 255, 0.28));
+    --glass-inner: rgba(255, 255, 255, 0.07);
+    --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+    --text: #f5f5f7;
+    --text-2: rgba(235, 235, 245, 0.6);
+    --separator: rgba(255, 255, 255, 0.1);
+    --fill: rgba(255, 255, 255, 0.12);
+    --accent: #ff453a;
+    --red: #ff5a50;
+    --red-tint: rgba(255, 69, 58, 0.2);
+  }
+}
+
+:root[data-theme="dark"] {
+  --glass:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 38%, rgba(255, 255, 255, 0.02) 62%, rgba(255, 255, 255, 0.14) 100%),
+    rgba(20, 20, 28, 0.62);
+  --glass-rim: linear-gradient(160deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.04) 35%, rgba(255, 255, 255, 0.02) 65%, rgba(255, 255, 255, 0.28));
+  --glass-inner: rgba(255, 255, 255, 0.07);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  --text: #f5f5f7;
+  --text-2: rgba(235, 235, 245, 0.6);
+  --separator: rgba(255, 255, 255, 0.1);
+  --fill: rgba(255, 255, 255, 0.12);
+  --accent: #ff453a;
+  --red: #ff5a50;
+  --red-tint: rgba(255, 69, 58, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Garante que o atributo hidden esconde mesmo elementos com display definido */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.widget {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 16px);
+  margin: 8px;
+  padding: 16px 14px 12px;
+  border-radius: 28px;
+  /* Sem sombra exterior: a janela é transparente e a sombra seria cortada num retângulo */
+  box-shadow: var(--glass-edge);
+  overflow: hidden;
+}
+
+/* Aro de brilho: gradiente só na borda, em vez de um contorno sólido */
+.widget::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--glass-rim);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Reflexo especular no canto superior esquerdo */
+.widget::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(130% 55% at 10% 0%, rgba(255, 255, 255, 0.35), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.widget > * {
+  position: relative;
+  z-index: 3;
+}
+
+/* ---------- Cabeçalho ---------- */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0 2px;
+  margin-bottom: 12px;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red);
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+/* Ícones SVG: centrados com grid e sem traço de texto a desalinhar */
+.round-btn,
+.add-btn,
+.check,
+.delete {
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.round-btn svg,
+.add-btn svg,
+.check svg,
+.delete svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.round-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: var(--fill);
+  box-shadow: var(--glass-edge);
+  color: var(--text-2);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.round-btn:hover {
+  color: var(--text);
+  background: var(--separator);
+}
+
+/* ---------- Composição ---------- */
+
+.composer {
+  margin-bottom: 12px;
+}
+
+.composer-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.composer-row input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 12px;
+  background: var(--fill);
+  box-shadow: var(--glass-edge);
+  outline: none;
+  user-select: text;
+}
+
+.composer-row input::placeholder {
+  color: var(--text-2);
+}
+
+.composer-row input:focus {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.add-btn {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.35), transparent 55%), var(--accent);
+  box-shadow: var(--glass-edge), 0 4px 12px color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--accent-text);
+  padding: 0;
+  display: grid;
+  place-items: center;
+  transition: transform 120ms ease;
+}
+
+.add-btn:active {
+  transform: scale(0.92);
+}
+
+.chip {
+  position: relative;
+  height: 26px;
+  padding: 0 11px;
+  border: none;
+  border-radius: 999px;
+  background: var(--fill);
+  box-shadow: var(--glass-edge);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.chip.active {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.35), transparent 60%), var(--accent);
+  color: var(--accent-text);
+}
+
+.composer-date {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ---------- Categorias ---------- */
+
+.category-panel {
+  margin-top: 8px;
+  padding: 10px 10px 12px;
+  border-radius: 18px;
+  background: var(--glass-inner);
+  box-shadow: var(--glass-edge);
+  user-select: none;
+}
+
+.task .category-panel {
+  margin: 0 10px 10px;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.category-add {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.category-add input {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 10px;
+  background: var(--fill);
+  box-shadow: var(--glass-edge);
+  outline: none;
+  user-select: text;
+  font-size: 12.5px;
+}
+
+.category-add input::placeholder {
+  color: var(--text-2);
+}
+
+.category-add .round-btn {
+  flex: none;
+}
+
+/* Bolinha de cor que identifica a categoria num chip */
+.cat-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: none;
+}
+
+.filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-bar .chip {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* ---------- Saída (botão fechar) ---------- */
+
+.widget.closing {
+  animation: widget-out 220ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes widget-out {
+  to {
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+  }
+}
+
+/* Fundo de vidro em camada própria, para a opacidade afetar só o fundo e não o texto */
+.widget > .glass-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: var(--glass);
+  opacity: var(--glass-opacity, 1);
+}
+
+/* Difração: franja de cor fina na borda, como a luz que se decompõe ao atravessar vidro */
+.widget > .glass-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(from 200deg, #ff5f6d, #ffc371, #f9f871, #5ef38c, #4cc9f0, #7b61ff, #f25cd1, #ff5f6d);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: blur(1.2px);
+  opacity: 0.45;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Halo interior, com cor nos dois lados, para a borda parecer prismática */
+.widget > .glass-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 18px -8px rgba(120, 200, 255, 0.35),
+    inset 0 0 26px -14px rgba(255, 120, 200, 0.3);
+  pointer-events: none;
+}
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.round-btn.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ---------- Modo compacto (só leitura) ---------- */
+
+.widget.compact .composer,
+.widget.compact .delete,
+.widget.compact .settings {
+  display: none;
+}
+
+.widget.compact .check,
+.widget.compact .date-pill,
+.widget.compact .category-pill {
+  pointer-events: none;
+}
+
+.widget.compact .task-main {
+  padding: 8px 12px;
+}
+
+.widget.compact .task-title {
+  font-size: 13px;
+}
+
+.widget.compact .header {
+  margin-bottom: 8px;
+}
+
+/* ---------- Definições ---------- */
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--glass-inner);
+  box-shadow: var(--glass-edge);
+  margin-bottom: 8px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.settings::-webkit-scrollbar {
+  display: none;
+}
+
+.setting-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.setting-value {
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.settings input[type="range"] {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.swatches {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  box-shadow: var(--glass-edge);
+}
+
+.swatch.active {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.positions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  aspect-ratio: 2.2 / 1;
+}
+
+.pos-btn {
+  display: grid;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: var(--fill);
+  box-shadow: var(--glass-edge);
+}
+
+.pos-btn:hover {
+  background: var(--separator);
+}
+
+.pos-btn.active {
+  background: var(--accent);
+}
+
+.pos-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-2);
+}
+
+.pos-btn.active .pos-dot {
+  background: var(--accent-text);
+}
+
+.sync-status {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.sync-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Data e hora ---------- */
+
+.date-panel {
+  margin-top: 10px;
+  padding: 10px 10px 12px;
+  border-radius: 18px;
+  background: var(--glass-inner);
+  box-shadow: var(--glass-edge);
+  user-select: none;
+  align-self: stretch;
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 0.5px solid var(--separator);
+}
+
+.time-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.time-sep {
+  font-weight: 600;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--fill);
+  box-shadow: var(--glass-edge);
+  overflow: hidden;
+}
+
+.stepper-btn {
+  width: 26px;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  display: grid;
+  place-items: center;
+}
+
+.stepper-btn:hover {
+  color: var(--text);
+}
+
+.stepper-btn svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stepper-value {
+  min-width: 22px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.link-btn {
+  margin-right: auto;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: var(--red);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.done-btn {
+  height: 30px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  box-shadow: var(--glass-edge);
+}
+
+/* ---------- Lista ---------- */
+
+.sections {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0 -4px;
+  padding: 0 4px 4px;
+  scrollbar-width: none;
+}
+
+.sections::-webkit-scrollbar {
+  display: none;
+}
+
+.section {
+  margin-bottom: 14px;
+}
+
+.section-title {
+  margin: 0 8px 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.section-title.overdue {
+  color: var(--red);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 20px;
+  background: var(--glass-inner);
+  box-shadow: var(--glass-edge);
+  overflow: hidden;
+}
+
+.task {
+  position: relative;
+}
+
+.task-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+}
+
+.task .date-panel {
+  margin: 0 10px 10px;
+}
+
+.task + .task::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 46px;
+  right: 0;
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.check {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border: 1.5px solid var(--text-2);
+  border-radius: 50%;
+  background: transparent;
+  color: transparent;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.check svg {
+  width: 11px;
+  height: 11px;
+  stroke-width: 2.6;
+}
+
+.check:hover {
+  border-color: var(--accent);
+}
+
+.task.done .check {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.task-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+
+.task-title {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+  user-select: text;
+}
+
+.task.done .task-title {
+  color: var(--text-2);
+  text-decoration: line-through;
+}
+
+.date-pill,
+.category-pill {
+  display: inline-flex;
+  padding: 2px 8px;
+  border: none;
+  border-radius: 8px;
+  background: var(--fill);
+  color: var(--text-2);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.date-pill.overdue {
+  background: var(--red-tint);
+  color: var(--red);
+}
+
+.date-pill.empty,
+.category-pill.empty {
+  color: var(--accent);
+  background: transparent;
+  padding-left: 0;
+}
+
+.delete {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.task:hover .delete,
+.delete:focus-visible {
+  opacity: 1;
+}
+
+.delete:hover {
+  color: var(--red);
+  background: var(--red-tint);
+}
+
+.delete svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* ---------- Calendário ---------- */
+
+.calendar {
+  width: 100%;
+}
+
+.cal-head {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.cal-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.cal-nav {
+  width: 22px;
+  height: 22px;
+}
+
+.cal-nav svg {
+  width: 12px;
+  height: 12px;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 2px;
+  text-align: center;
+}
+
+.cal-weekday {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  padding-bottom: 4px;
+}
+
+.cal-blank {
+  height: 28px;
+}
+
+.cal-day {
+  height: 30px;
+  width: 30px;
+  justify-self: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  transition: background 120ms ease;
+}
+
+.cal-day:hover {
+  background: var(--fill);
+}
+
+.cal-day.today {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.cal-day.selected {
+  background: var(--accent);
+  color: var(--accent-text);
+  box-shadow: none;
+}
+
+.empty {
+  margin: auto 0;
+  color: var(--text-2);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ---------- Movimento fluido ---------- */
+
+:root {
+  /* Curva com ligeiro excesso: os botões "assentam" como uma gota de líquido */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Resposta ao toque: encolhe ao carregar e mola de volta ao soltar */
+.round-btn,
+.chip,
+.done-btn,
+.stepper-btn,
+.cal-day,
+.pos-btn,
+.swatch,
+.delete,
+.add-btn,
+.check,
+.task-main {
+  transition:
+    transform 320ms var(--spring),
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    opacity 180ms ease;
+}
+
+.round-btn:active,
+.chip:active,
+.done-btn:active,
+.stepper-btn:active,
+.cal-day:active,
+.pos-btn:active {
+  transform: scale(0.88);
+}
+
+.add-btn:active {
+  transform: scale(0.9);
+}
+
+.check:active {
+  transform: scale(0.8);
+}
+
+.delete:active {
+  transform: scale(0.85);
+}
+
+.swatch:hover {
+  transform: scale(1.12);
+}
+
+.swatch:active {
+  transform: scale(0.9);
+}
+
+.task-main:active {
+  transform: scale(0.985);
+}
+
+.task:hover .task-main {
+  background: var(--fill);
+}
+
+/* Entrada de uma tarefa nova: cai com um ligeiro desfocar, como uma gota a assentar */
+@keyframes task-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.94);
+    filter: blur(3px);
+  }
+}
+
+.task-main.enter {
+  animation: task-enter 480ms var(--spring) both;
+}
+
+/* Saída de uma tarefa apagada: desliza para a direita e desvanece */
+@keyframes task-out {
+  to {
+    opacity: 0;
+    transform: translateX(28px) scale(0.92);
+    filter: blur(3px);
+  }
+}
+
+.task-main.leaving {
+  animation: task-out 200ms ease-in forwards;
+  pointer-events: none;
+}
+
+/* Painéis que aparecem (definições e lista): entram com fusão suave */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+    filter: blur(4px);
+  }
+}
+
+.settings:not([hidden]),
+.sections:not([hidden]) {
+  animation: panel-in 380ms var(--ease-fluid) both;
+}
+
+/* Scroll líquido: cada tarefa "escorre" para dentro da área visível (scroll-driven animation).
+   Começa como uma gota achatada e cortada por baixo, incha um pouco e assenta. */
+@keyframes scroll-reveal {
+  from {
+    clip-path: inset(0 0 100% 0 round 14px);
+    opacity: 0.3;
+    transform: translateY(16px) scaleY(0.82);
+    filter: blur(3px);
+  }
+  60% {
+    clip-path: inset(0 0 0 0 round 14px);
+    opacity: 1;
+    transform: translateY(-2px) scaleY(1.03);
+    filter: blur(0);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 0);
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .task {
+    animation: scroll-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+
+/* Esticar ao scroll: --stretch é definido em renderer.js conforme a velocidade do movimento */
+.task {
+  scale: 1 var(--stretch, 1);
+  transition: scale 420ms var(--spring);
+}
+
+.sections {
+  --stretch: 1;
+  overscroll-behavior: contain;
+}
+
+/* ---------- Skeleton (arranque) ---------- */
+
+.skeleton {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 4px;
+  transition:
+    opacity 300ms ease,
+    transform 350ms var(--ease-fluid),
+    filter 300ms ease;
+}
+
+.skeleton.gone {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  filter: blur(4px);
+}
+
+.skel-title {
+  width: 70px;
+  height: 9px;
+  margin: 0 8px 8px;
+  border-radius: 999px;
+}
+
+.skel-title.short {
+  width: 48px;
+}
+
+.skel-list {
+  border-radius: 20px;
+  background: var(--glass-inner);
+  box-shadow: var(--glass-edge);
+  overflow: hidden;
+}
+
+.skel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+}
+
+.skel-row + .skel-row {
+  border-top: 0.5px solid var(--separator);
+}
+
+.skel-dot {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--separator);
+}
+
+.skel-bar {
+  display: block;
+  height: 10px;
+  width: 58%;
+  border-radius: 999px;
+}
+
+.skel-bar.long {
+  width: 78%;
+}
+
+.skel-bar.short {
+  width: 30%;
+  margin-left: auto;
+}
+
+/* Brilho que passa pelas peças do skeleton */
+.skel-title,
+.skel-bar {
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%),
+    var(--fill);
+  background-size: 200% 100%, auto;
+  background-repeat: no-repeat;
+  animation: skel-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skel-shimmer {
+  from {
+    background-position: 150% 0, 0 0;
+  }
+  to {
+    background-position: -50% 0, 0 0;
+  }
+}
+
+/* Quem prefere menos movimento no sistema não vê estas animações */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .task {
+    animation: none;
+  }
+}

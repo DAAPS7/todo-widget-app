@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:background="@color/app_background"
-    android:padding="16dp">
+    android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,41 +14,20 @@
         android:textColor="@color/widget_text"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="12dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/main_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
 
-        <EditText
-            android:id="@+id/main_input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/add_task_hint"
-            android:textColor="@color/widget_text"
-            android:textColorHint="@color/widget_text_secondary"
-            android:background="@drawable/dialog_background"
-            android:padding="12dp"
-            android:imeOptions="actionDone"
-            android:singleLine="true" />
-
-        <Button
-            android:id="@+id/main_add_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/add" />
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/main_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@null"
-        android:dividerHeight="4dp" />
+    <Button
+        android:id="@+id/main_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
