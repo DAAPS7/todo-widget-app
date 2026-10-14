@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tarefas</string>
+    <string name="widget_name">Tarefas</string>
+    <string name="widget_description">Widget de tarefas</string>
+    <string name="empty_tasks">Sem tarefas</string>
+    <string name="add_task_hint">Nova tarefa…</string>
+    <string name="add">Adicionar</string>
+    <string name="cancel">Cancelar</string>
+</resources>
