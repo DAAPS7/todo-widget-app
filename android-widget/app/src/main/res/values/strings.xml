@@ -7,4 +7,5 @@
     <string name="add_task_hint">Nova tarefa…</string>
     <string name="add">Adicionar</string>
     <string name="cancel">Cancelar</string>
+    <string name="choose_accent">Cor de destaque</string>
 </resources>

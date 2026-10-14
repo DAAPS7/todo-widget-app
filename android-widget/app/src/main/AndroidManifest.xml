@@ -24,6 +24,16 @@
             android:theme="@style/Theme.Tarefas.Dialog"
             android:excludeFromRecents="true" />
 
+        <activity
+            android:name=".WidgetConfigureActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Tarefas.Dialog"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".TodoWidgetProvider"
             android:exported="true">

@@ -41,6 +41,10 @@ class TodoWidgetProvider : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.widget_add_button, addPending)
 
+            // Cor de destaque escolhida na configuração do widget
+            val accent = WidgetPrefs.getAccent(context, widgetId)
+            views.setInt(R.id.widget_add_button, "setColorFilter", accent)
+
             // Lista de tarefas (collection widget)
             val listIntent = Intent(context, TodoWidgetService::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
@@ -63,6 +67,10 @@ class TodoWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         updateWidgets(context, appWidgetManager, appWidgetIds)
+    }
+
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        appWidgetIds.forEach { WidgetPrefs.remove(context, it) }
     }
 
     override fun onReceive(context: Context, intent: Intent) {

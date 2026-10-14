@@ -7,4 +7,6 @@
     <color name="circle_border">#80F5F5F7</color>
     <color name="app_background">#1C1C24</color>
     <color name="app_background_light">#2A2A35</color>
+    <color name="widget_separator">#1AFFFFFF</color>
+    <color name="glass_rim">#59FFFFFF</color>
 </resources>

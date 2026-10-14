@@ -6,7 +6,10 @@ import android.graphics.Paint
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 
-class TodoWidgetViewsFactory(private val context: Context) : RemoteViewsFactory {
+class TodoWidgetViewsFactory(
+    private val context: Context,
+    private val widgetId: Int
+) : RemoteViewsFactory {
 
     private var tasks: List<Task> = emptyList()
 
@@ -37,6 +40,9 @@ class TodoWidgetViewsFactory(private val context: Context) : RemoteViewsFactory 
             R.id.item_circle, "setImageResource",
             if (task.done) R.drawable.circle_checked else R.drawable.circle_unchecked
         )
+        if (task.done) {
+            views.setInt(R.id.item_circle, "setColorFilter", WidgetPrefs.getAccent(context, widgetId))
+        }
 
         val toggleFillIn = Intent().apply {
             action = TodoWidgetProvider.ACTION_TOGGLE_TASK
