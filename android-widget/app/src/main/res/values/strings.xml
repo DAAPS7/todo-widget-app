@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tarefas</string>
-    <string name="cancel">Fechar</string>
-    <string name="overlay_running">Widget ativo no ecrã</string>
-    <string name="permission_title">Permissão necessária</string>
-    <string name="permission_explanation">Para o widget flutuante funcionar, a app precisa de permissão para aparecer sobre outras apps.</string>
-    <string name="grant_permission">Dar permissão</string>
-    <string name="start_widget">Iniciar widget</string>
-    <string name="stop_widget">Parar widget</string>
+    <string name="widget_name">Tarefas</string>
+    <string name="widget_description">Widget de tarefas</string>
+    <string name="empty_tasks">Sem tarefas</string>
+    <string name="add_task_hint">Nova tarefa…</string>
+    <string name="add">Adicionar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="choose_accent">Cor de destaque</string>
 </resources>
